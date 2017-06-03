@@ -39,11 +39,6 @@ public class DiscordianDate {
 		_seasonDay = (yd % MAX_DAY_OF_SEASON) + 1;
 	}
 
-	private static Optional<String> whichHoliday(DiscordianDate ddate) {
-		return getHolyday(ddate).equals(DiscordianHoliday.NO_HOLIDAY) ? Optional.empty()
-				: Optional.of(getHolyday(ddate));
-	}
-
 	private static class DiscordianHoliday {
 		int day;
 		boolean leap;
@@ -74,6 +69,16 @@ public class DiscordianDate {
 			map.put(leap ? 298 : 297, _holidays[9]);
 			map.put(leap ? 343 : 342, _holidays[10]);
 		}
+	}
+
+	/**
+	 * @param ddate
+	 *            the Discordian date
+	 * @return an Optional of String of the Holiday
+	 */
+	public static Optional<String> whichHoliday(DiscordianDate ddate) {
+		return getHolyday(ddate).equals(DiscordianHoliday.NO_HOLIDAY) ? Optional.empty()
+				: Optional.of(getHolyday(ddate));
 	}
 
 	/**
