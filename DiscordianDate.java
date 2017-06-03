@@ -9,7 +9,7 @@ import java.util.Optional;
  * Hail Eris! A Class to work with discordian dates
  * 
  * @author 0xflotus
- * @version 0.9.3 06/03/2017
+ * @version 0.9.4 06/03/2017
  * @since 06/02/2017
  *
  */
@@ -37,6 +37,11 @@ public class DiscordianDate {
 		_season = (yd / MAX_DAY_OF_SEASON) + 1;
 		_weekDay = (yd % COUNT_DAYS) + 1;
 		_seasonDay = (yd % MAX_DAY_OF_SEASON) + 1;
+	}
+
+	private static Optional<String> whichHoliday(DiscordianDate ddate) {
+		return getHolyday(ddate).equals(DiscordianHoliday.NO_HOLIDAY) ? Optional.empty()
+				: Optional.of(getHolyday(ddate));
 	}
 
 	private static class DiscordianHoliday {
@@ -78,73 +83,6 @@ public class DiscordianDate {
 	 */
 	public static String getHolyday(DiscordianDate ddate) {
 		return new DiscordianHoliday(ddate._yearDay, DiscordianDate._isLeap).getHoliday();
-	}
-
-	/**
-	 * @param ddate
-	 *            the discordian date
-	 * @return an Optional of String as Holiday
-	 */
-	public static Optional<String> whichHoliday(DiscordianDate ddate) {
-		switch (ddate._yearDay) {
-		case 5:
-			return Optional.of(_holidays[0]);
-		case 50:
-			return Optional.of(_holidays[1]);
-		case 60:
-			if (_isLeap)
-				return Optional.of(_holidays[2]);
-		case 78:
-			if (!_isLeap)
-				return Optional.of(_holidays[3]);
-		case 79:
-			if (_isLeap)
-				return Optional.of(_holidays[3]);
-		case 123:
-			if (!_isLeap)
-				return Optional.of(_holidays[4]);
-		case 124:
-			if (_isLeap)
-				return Optional.of(_holidays[4]);
-		case 151:
-			if (!_isLeap)
-				return Optional.of(_holidays[5]);
-		case 152:
-			if (_isLeap)
-				return Optional.of(_holidays[5]);
-		case 196:
-			if (!_isLeap)
-				return Optional.of(_holidays[6]);
-		case 197:
-			if (_isLeap)
-				return Optional.of(_holidays[6]);
-		case 224:
-			if (!_isLeap)
-				return Optional.of(_holidays[7]);
-		case 225:
-			if (_isLeap)
-				return Optional.of(_holidays[7]);
-		case 269:
-			if (!_isLeap)
-				return Optional.of(_holidays[8]);
-		case 270:
-			if (_isLeap)
-				return Optional.of(_holidays[8]);
-		case 297:
-			if (!_isLeap)
-				return Optional.of(_holidays[9]);
-		case 298:
-			if (_isLeap)
-				return Optional.of(_holidays[9]);
-		case 342:
-			if (!_isLeap)
-				return Optional.of(_holidays[10]);
-		case 343:
-			if (_isLeap)
-				return Optional.of(_holidays[10]);
-		default:
-			return Optional.empty();
-		}
 	}
 
 	/**
@@ -297,6 +235,13 @@ public class DiscordianDate {
 	}
 
 	/**
+	 * @return the LocalDate-Representation of the discordian date
+	 */
+	public LocalDate getTime() {
+		return _localDate;
+	}
+
+	/**
 	 * @return a List of Holiday Names
 	 */
 	public static List<String> getHolidayNames() {
@@ -325,12 +270,5 @@ public class DiscordianDate {
 		return _isLeap && _yearDay == 59 ? _holidays[2] + ", " + Integer.toString(_year)
 				: _dayNames[_weekDay - 1] + ", " + _seasonNames[_season - 1] + " " + Integer.toString(_seasonDay) + ", "
 						+ Integer.toString(_year);
-	}
-
-	/**
-	 * @return the LocalDate-Representation of the discordian date
-	 */
-	public LocalDate getTime() {
-		return _localDate;
 	}
 }
