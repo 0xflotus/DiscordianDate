@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +46,6 @@ public class DiscordianDate implements Comparable<DiscordianDate> {
 	 * the maximum value of a discordian date
 	 */
 	public static final DiscordianDate MAX_VALUE = new DiscordianDate(LocalDate.MAX);
-
-	/**
-	 * a comparator to compare two discordian dates
-	 */
-	public static final Comparator<DiscordianDate> COMPARATOR = (one, two) -> one.compareTo(two);
 
 	/**
 	 * a List of the Holiday names
