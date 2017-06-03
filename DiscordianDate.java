@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,11 @@ import java.util.Optional;
  * Hail Eris! A Class to work with discordian dates
  * 
  * @author 0xflotus
- * @version 0.9.4 06/03/2017
+ * @version 0.9.5 06/03/2017
  * @since 06/02/2017
  *
  */
-public class DiscordianDate {
+public class DiscordianDate implements Comparable<DiscordianDate> {
 	private int _year, _season, _yearDay, _seasonDay, _weekDay;
 	private static boolean _isLeap;
 	private static String[] _seasonNames = { "Chaos", "Discord", "Confusion", "Bureaucracy", "The Aftermath" };
@@ -21,11 +22,51 @@ public class DiscordianDate {
 	private static String[] _holidays = { "Mungday", "Chaoflux", "St. Tib's Day", "Mojoday", "Discoflux", "Syaday",
 			"Confuflux", "Zaraday", "Bureflux", "Maladay", "Afflux" };
 	private static LocalDate _localDate;
+
+	/**
+	 * maximum amount of days per season
+	 */
 	public static final int MAX_DAY_OF_SEASON = 73;
+
+	/**
+	 * difference of discordian year and gregorian year
+	 */
 	public static final int YEAR_DIFFERENCE = 1166;
+
+	/**
+	 * amount of seasons
+	 */
 	public static final int COUNT_SEASONS = _seasonNames.length;
+
+	/**
+	 * amount of days
+	 */
 	public static final int COUNT_DAYS = _dayNames.length;
+
+	/**
+	 * the maximum value of a discordian date
+	 */
 	public static final DiscordianDate MAX_VALUE = new DiscordianDate(LocalDate.MAX);
+
+	/**
+	 * a comparator to compare two discordian dates
+	 */
+	public static final Comparator<DiscordianDate> COMPARATOR = (one, two) -> one.compareTo(two);
+
+	/**
+	 * a List of the Holiday names
+	 */
+	public static final List<String> HOLIDAY_NAMES = Arrays.asList(_holidays);
+
+	/**
+	 * a List of possible Day names
+	 */
+	public static final List<String> POSSIBLE_DAY_NAMES = Arrays.asList(_dayNames);
+
+	/**
+	 * a List of possible Season names
+	 */
+	public static final List<String> POSSIBLE_SEASON_NAMES = Arrays.asList(_seasonNames);
 
 	private DiscordianDate(LocalDate ld) {
 		_year = ld.getYear() + YEAR_DIFFERENCE;
@@ -96,7 +137,7 @@ public class DiscordianDate {
 	 * @return true, if the date is a holyday
 	 */
 	public static boolean isHoliday(DiscordianDate ddate) {
-		return DiscordianDate.whichHoliday(ddate).isPresent();
+		return whichHoliday(ddate).isPresent();
 	}
 
 	/**
@@ -105,7 +146,36 @@ public class DiscordianDate {
 	 * @return true, if the object is a holyday
 	 */
 	public boolean isHoliday() {
-		return DiscordianDate.isHoliday(this);
+		return isHoliday(this);
+	}
+
+	/**
+	 * @param ddate
+	 *            the discordian date
+	 * @return true, if the date is after the other date
+	 */
+	public boolean isAfter(DiscordianDate ddate) {
+		return ddate.getTime().isAfter(_localDate);
+	}
+
+	/**
+	 * @param ddate
+	 *            the discordian date
+	 * @return true, if the date is before the other date
+	 */
+	public boolean isBefore(DiscordianDate ddate) {
+		return ddate.getTime().isBefore(_localDate);
+	}
+
+	/**
+	 * @param start
+	 *            the start date
+	 * @param end
+	 *            the end date
+	 * @return true, if the date is between the start and end date
+	 */
+	public boolean isBetween(DiscordianDate start, DiscordianDate end) {
+		return isAfter(start) && isBefore(end);
 	}
 
 	/**
@@ -247,27 +317,6 @@ public class DiscordianDate {
 	}
 
 	/**
-	 * @return a List of Holiday Names
-	 */
-	public static List<String> getHolidayNames() {
-		return Arrays.asList(_holidays);
-	}
-
-	/**
-	 * @return a List of possible DayNames
-	 */
-	public static List<String> getPossibleDayNames() {
-		return Arrays.asList(_dayNames);
-	}
-
-	/**
-	 * @return a List of possible SeasonNames
-	 */
-	public static List<String> getPossibleSeasonNames() {
-		return Arrays.asList(_seasonNames);
-	}
-
-	/**
 	 * A String representation of the discordian date
 	 */
 	@Override
@@ -275,5 +324,15 @@ public class DiscordianDate {
 		return _isLeap && _yearDay == 59 ? _holidays[2] + ", " + Integer.toString(_year)
 				: _dayNames[_weekDay - 1] + ", " + _seasonNames[_season - 1] + " " + Integer.toString(_seasonDay) + ", "
 						+ Integer.toString(_year);
+	}
+
+	/**
+	 * @param other
+	 *            the other DiscordianDate
+	 * @return the comparator value, negative if less, positive if greater
+	 */
+	@Override
+	public int compareTo(DiscordianDate other) {
+		return _localDate.compareTo(other.getTime());
 	}
 }
