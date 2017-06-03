@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,11 @@ import java.util.Optional;
  * Hail Eris! A Class to work with discordian dates
  * 
  * @author 0xflotus
- * @version 0.9.5 06/03/2017
+ * @version 0.9.6 06/04/2017
  * @since 06/02/2017
  *
  */
-public class DiscordianDate implements Comparable<DiscordianDate> {
+public class DiscordianDate {
 	private int _year, _season, _yearDay, _seasonDay, _weekDay;
 	private static boolean _isLeap;
 	private static String[] _seasonNames = { "Chaos", "Discord", "Confusion", "Bureaucracy", "The Aftermath" };
@@ -21,6 +22,8 @@ public class DiscordianDate implements Comparable<DiscordianDate> {
 	private static String[] _holidays = { "Mungday", "Chaoflux", "St. Tib's Day", "Mojoday", "Discoflux", "Syaday",
 			"Confuflux", "Zaraday", "Bureflux", "Maladay", "Afflux" };
 	private static LocalDate _localDate;
+	private static Comparator<DiscordianDate> COMPARATOR_BY_YEAR = (one, two) -> one.getYear() - two.getYear();
+	private static Comparator<DiscordianDate> COMPARATOR_BY_DAY = (one, two) -> one.getYearDay() - two.getYearDay();
 
 	/**
 	 * maximum amount of days per season
@@ -61,6 +64,11 @@ public class DiscordianDate implements Comparable<DiscordianDate> {
 	 * a List of possible Season names
 	 */
 	public static final List<String> POSSIBLE_SEASON_NAMES = Arrays.asList(_seasonNames);
+
+	/**
+	 * a Comparator
+	 */
+	public static Comparator<DiscordianDate> COMPARATOR = COMPARATOR_BY_YEAR.thenComparing(COMPARATOR_BY_DAY);
 
 	private DiscordianDate(LocalDate ld) {
 		_year = ld.getYear() + YEAR_DIFFERENCE;
@@ -318,15 +326,5 @@ public class DiscordianDate implements Comparable<DiscordianDate> {
 		return _isLeap && _yearDay == 59 ? _holidays[2] + ", " + Integer.toString(_year)
 				: _dayNames[_weekDay - 1] + ", " + _seasonNames[_season - 1] + " " + Integer.toString(_seasonDay) + ", "
 						+ Integer.toString(_year);
-	}
-
-	/**
-	 * @param other
-	 *            the other DiscordianDate
-	 * @return the comparator value, negative if less, positive if greater
-	 */
-	@Override
-	public int compareTo(DiscordianDate other) {
-		return _localDate.compareTo(other.getTime());
 	}
 }
