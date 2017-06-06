@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Hail Eris! A Class to work with discordian dates
+ * A Class to work with discordian dates
  * 
  * @author 0xflotus
- * @version 0.9.6 06/04/2017
+ * @version 0.9.7 06/06/2017
  * @since 06/02/2017
  *
  */
@@ -149,35 +149,6 @@ public class DiscordianDate {
 	 */
 	public boolean isHoliday() {
 		return isHoliday(this);
-	}
-
-	/**
-	 * @param ddate
-	 *            the discordian date
-	 * @return true, if the date is after the other date
-	 */
-	public boolean isAfter(DiscordianDate ddate) {
-		return ddate.getTime().isAfter(_localDate);
-	}
-
-	/**
-	 * @param ddate
-	 *            the discordian date
-	 * @return true, if the date is before the other date
-	 */
-	public boolean isBefore(DiscordianDate ddate) {
-		return ddate.getTime().isBefore(_localDate);
-	}
-
-	/**
-	 * @param start
-	 *            the start date
-	 * @param end
-	 *            the end date
-	 * @return true, if the date is between the start and end date
-	 */
-	public boolean isBetween(DiscordianDate start, DiscordianDate end) {
-		return isAfter(start) && isBefore(end);
 	}
 
 	/**
